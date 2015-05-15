@@ -1,5 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
+
+#include "VICColorfade_internal.h"
+
+extern uint8_t VICColorfadeTables[];
 
 int main()
 {
