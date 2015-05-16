@@ -29,6 +29,18 @@
 		<Unit filename="VICColorfadeNew.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="VICColorfadeObjAlloc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="VICColorfadeSetMode.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="VICColorfadeSetStartEnd.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="VICColorfade_SetSpeed.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="VICColorfade_internal.h" />
 		<Unit filename="coltab.s" />
 		<Unit filename="main.c">
