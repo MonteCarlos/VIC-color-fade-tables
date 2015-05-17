@@ -23,5 +23,6 @@
 	};
 
 	VICColorfadeErrorNo_t VICColorfadeSetReadPtr(VICColorfade_t *vcf, VICColorfadeTableElement_t *addr);
+	VICColorfadeErrorNo_t VICColorfadeCalcReadPtr(VICColorfade_t *vcf);
 
 #endif // __VICCOLORFADE_INTERNAL_H__

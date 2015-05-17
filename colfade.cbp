@@ -26,6 +26,9 @@
 			</Target>
 		</Build>
 		<Unit filename="VICColorfade.h" />
+		<Unit filename="VICColorfadeCalcReadPtr.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="VICColorfadeGetNextColor.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -36,6 +39,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="VICColorfadeSetMode.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="VICColorfadeSetNewEndcolor.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="VICColorfadeSetReadPtr.c">
