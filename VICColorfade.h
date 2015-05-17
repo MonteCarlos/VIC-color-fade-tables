@@ -4,10 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+typedef uint8_t VICColorfadeTableElement_t;
 
 enum VICColorfadeErrorNo_tag{
 	VICCOLORFADEERR_OK = 0,
-	VICCOLORFADEERR_CHARMODEANDCOLORGT7;
+	VICCOLORFADEERR_CHARMODEANDCOLORGT7
 };
 
 typedef struct VICColorfade_tag  VICColorfade_t;
@@ -20,5 +21,6 @@ VICColorfade_t *VICColorfadeObjAlloc(void);
 VICColorfadeErrorNo_t VICColorfadeSetLimits(VICColorfade_t *vcf, uint8_t startcolor, uint8_t endcolor);
 VICColorfadeErrorNo_t VICColorfadeSetSpeed(VICColorfade_t *vcf, uint8_t speed);
 VICColorfadeErrorNo_t VICColorfadeSetMode(VICColorfade_t *vcf, uint8_t mode);
+VICColorfadeTableElement_t VICColorfadeGetNextColor(VICColorfade_t *vcf);
 
 #endif // VICCOLORFADE_H_INCLUDED

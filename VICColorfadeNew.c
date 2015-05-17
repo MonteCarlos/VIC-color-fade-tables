@@ -29,5 +29,6 @@ VICColorfade_t *VICColorfadeNew(uint8_t startcolor, uint8_t endcolor, VICColorfa
 			break;
 		}
 	}
+	VICColorfadeSetReadPtr(vcf, tableOffset+VICColorfadeTables);
 	return vcf;
 }

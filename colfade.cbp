@@ -7,7 +7,7 @@
 		<Option compiler="cc65" />
 		<Build>
 			<Target title="Debug">
-				<Option output="gcc/bin/Debug/colfade" prefix_auto="1" extension_auto="1" />
+				<Option output="colfade_dbg.prg" prefix_auto="0" extension_auto="0" />
 				<Option object_output="gcc/obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="cc65" />
@@ -16,7 +16,7 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="gcc/bin/Release/colfade" prefix_auto="1" extension_auto="1" />
+				<Option output="colfade.prg" prefix_auto="0" extension_auto="0" />
 				<Option object_output="gcc/obj/Release/" />
 				<Option type="1" />
 				<Option compiler="cc65" />
@@ -26,6 +26,9 @@
 			</Target>
 		</Build>
 		<Unit filename="VICColorfade.h" />
+		<Unit filename="VICColorfadeGetNextColor.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="VICColorfadeNew.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -33,6 +36,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="VICColorfadeSetMode.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="VICColorfadeSetReadPtr.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="VICColorfadeSetStartEnd.c">

@@ -5,6 +5,9 @@
 	#define ccAlloc(size) malloc(size)
 	#define ccFree(ptr) free(ptr)
 
+
+	extern VICColorfadeTableElement_t VICColorfadeTables[];
+
 	enum VICColorfadeMode_tag{
 		VICCOLORFADE_OLDVIC,
 		VICCOLORFADE_NEWVIC,
@@ -18,4 +21,7 @@
 		VICColorfadeMode_t mode;
 		uint8_t *elementPtr;
 	};
+
+	VICColorfadeErrorNo_t VICColorfadeSetReadPtr(VICColorfade_t *vcf, VICColorfadeTableElement_t *addr);
+
 #endif // __VICCOLORFADE_INTERNAL_H__
