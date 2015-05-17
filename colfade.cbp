@@ -32,6 +32,9 @@
 		<Unit filename="VICColorfadeGetNextColor.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="VICColorfadeIsComplete.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="VICColorfadeNew.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -1,3 +1,10 @@
+;The table takes account of hue, so f.e. red to white is a completely different chain than blue to white!!!
+
+;up to now each chain contains 8 colours. if the destination color needs only fewer steps, it is repeated until length equals 8
+
+;ideas: remove unnecessary repetitions of same color code at end of each chain
+;		transform color codes to brightness sorted color codes and use delta rle compression
+
 .EXPORT _VICColorfadeTables = *
 .EXPORT _nVICColorfadeTable_toBlack = *
 .BYTE $00,$00,$00,$00,$00,$00,$00,$00,$01,$0d,$03,$0c,$04,$02,$09,$00,$02,$09,$00,$00,$00,$00,$00,$00,$03,$0c,$04,$02,$09,$00,$00,$00,$04,$02,$09,$00,$00,$00,$00,$00,$05,$08,$02,$09,$00,$00,$00,$00,$06,$00,$00,$00,$00,$00,$00,$00,$07,$0f,$05,$08,$02,$09,$00,$00,$08,$02,$09,$00,$00,$00,$00,$00,$09,$00,$00,$00,$00,$00,$00,$00,$0a,$08,$02,$09,$00,$00,$00,$00,$0b,$09,$00,$00,$00,$00,$00,$00,$0c,$04,$02,$09,$00,$00,$00,$00,$0d,$03,$0c,$04,$02,$09,$00,$00,$0e,$04,$02,$09,$00,$00,$00,$00,$0f,$05,$08,$02,$09,$00,$00,$00
