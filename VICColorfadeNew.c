@@ -7,6 +7,7 @@ VICColorfade_t *VICColorfadeNew(uint8_t startcolor, uint8_t endcolor, VICColorfa
 	VICColorfadeSetMode(vcf, mode);
 	VICColorfadeSetLimits(vcf, startcolor, endcolor);
 	VICColorfadeSetSpeed(vcf, speed);
-
+	vcf->delay = 0;
+	vcf->counter = 256;
 	return vcf;
 }

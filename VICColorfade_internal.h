@@ -27,6 +27,8 @@
 		uint8_t startcolor;
 		uint8_t endcolor;
 		uint8_t speed;
+		uint8_t delay;
+		int16_t counter;
 		VICColorfadeState_t state;
 		VICColorfadeMode_t mode;
 
