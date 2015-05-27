@@ -50,48 +50,51 @@ void tableFader(VICColorfade_t *vcf){
 
 }
 
-void randFader(VICColorfade_t *vcf){
-	static uint8_t colortableSorted[] = {0,6,9,11,2,4,8,12,14,10,5,15,3,7,13,1};
-	static uint8_t colortableSortedcm[] = {0,6,2,4,5,3,7,1};
-	static uint8_t lastColorIdx = 0;
-	uint8_t endColorIdx = 0;
-	unsigned int randVal;
+void randFader2(VICColorfade_t *vcf){
 
-	if (lastColorIdx >= FADEMINSTEP){
-		if (lastColorIdx < 16-FADEMINSTEP){
+	//colortable contains four sections with 4 darkest colors, next 4 brighter colors, ..., 4 brightest colors
+	//fades are performed only between non adjacent sections
+	static uint8_t colortable[][4] = {{0,6,9,11},
+									 {2,4,8,12},
+									 {14,10,5,15},
+									 {3,7,13,1}};
 
-			randVal = rand()%(16-2*FADEMINSTEP+1);
-			if (randVal <= lastColorIdx-FADEMINSTEP){
-				endColorIdx = randVal;
-			}else{
-				endColorIdx = randVal+(2*FADEMINSTEP-1);
-			}
+	static uint8_t tableIdx=0;
+	unsigned int randNr, randNr2;
 
-		}else{
+	randNr = rand()/(RAND_MAX/2);//rand()%2;//
+	//(2*rand())/(RAND_MAX+1);
+	randNr2 = rand()/(RAND_MAX/4);//rand()%4;//
+	//(4*rand())/(RAND_MAX+1);
 
-			endColorIdx = rand()%(lastColorIdx-FADEMINSTEP+1);
-		}
-	}else{
-
-		endColorIdx = rand()%(16-(lastColorIdx+FADEMINSTEP))+lastColorIdx+FADEMINSTEP;
+	switch(tableIdx){
+	case 0:
+		tableIdx = randNr+2;
+		break;
+	case 1:
+		tableIdx = 3;
+		break;
+	case 2:
+		tableIdx = 0;
+		break;
+	case 3:
+		tableIdx = randNr;
+		break;
 	}
-	lastColorIdx = endColorIdx;
-	VICColorfadeSetNewEndcolor(vcf, colortableSorted[endColorIdx]);
-	//printf("%d\n", endColorIdx);
+	VICColorfadeSetNewEndcolor(vcf, colortable[tableIdx][randNr2]);
+
+	//printf("%u, %u\n", randNr, randNr2);
 }
 
 int main()
 {
-    static uint8_t colortableBright[] = {1,13,7,3,15,10,14,5};
-    static uint8_t colortableDark[] = {0,9,6,4,12,8,11,2};
-
     VICColorfade_t *vcf;
 	int8_t mode = -1;
 	clock_t tick;
 
     VIC.bordercolor = VIC.bgcolor0 = 0;
     clrscr();
-	srand(3);
+	srand(time(NULL));
     mode = menu();
 	vcf = VICColorfadeNew(0,0,mode,64);
 
@@ -102,7 +105,7 @@ int main()
 		VIC.bgcolor0 = VICColorfadeGetNextColor(vcf);
 		if (VICColorfadeIsComplete(vcf)){
 			//tableFader(vcf);
-			randFader(vcf);
+			randFader2(vcf);
 			//++endcolorIdx;
 			tick = clock();
 			while(abs(clock()-tick) < CLOCKS_PER_SEC);
