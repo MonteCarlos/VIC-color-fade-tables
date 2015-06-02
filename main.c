@@ -5,8 +5,46 @@
 #include <time.h>
 
 #define FADEMINSTEP 4
+typedef void menufnc_t(void);
+typedef bool fgvOperation_t;
+enum FGVOPERATIONENUM{FGV_MINOP=-1, FGV_SET = true, FGV_GET = false, FGV_MAXOP=2};
+
+#define ID(x) x
+#define _CONCAT(x,y) x##y
+#define CONCAT(x,y) _CONCAT(ID(x),ID(y))
+#define MCONCAT(x,...) MCONCAT(x,__VA_ARGS__)
+
+#define MENUBASELIST() M("Old VIC", MENU_OLDVIC, setOldVIC) M("New VIC",MENU_NEWVIC, setNewVIC),\
+		 M("Charmode",MENU_CHARMODE, setCharmode),\
+		 M("Start random demo",MENU_RANDSTART), M("Set start color",MENU_SETSTARTCOLOR),\
+		 M("Set end color",MENU_SETENDCOLOR)
+
+#define M(x,y) x,
+#define MENUSTRINGLIST MENUBASELIST ""
+#undef M
+
+#define M(x,y) y,
+#define MENUIDLIST MENUBASELIST MENU_NOID
+#undef M
+
+#pragma charmap('_', ' ')
+
+
 
 extern uint8_t VICColorfadeTables[];
+
+char getNumKey(void){
+	char keyPressed;
+
+	while(!kbhit());
+	keyPressed = cgetc();
+	if (keyPressed < '9'+1){
+		if (keyPressed > '0'-1){
+			return keyPressed-'0';
+		}
+	}
+	return 255; //non valid key!
+}
 
 int createChoice(char *text){
 	static uint8_t NumberOfChoices = 0;
@@ -23,21 +61,137 @@ int createChoice(char *text){
 	return ++NumberOfChoices;
 }
 
-int menu(void){
-	uint8_t NumberOfEntries;
-	char keyPressed;
+VICColorfadeMode_t fgvMode(fgvOperation_t op, ...){
+	static VICColorfadeMode_t mode = VICCOLORFADE_NEWVIC;
+	va_list va;
+	va_start(va, op);
+	switch(op){
+	case FGV_SET:
 
-	createChoice("Old VIC");
-	createChoice("New VIC");
-	NumberOfEntries = createChoice("Charmode");
-
-	while(!kbhit());
-	keyPressed = cgetc();
-	if (keyPressed < '9'+1){
-		if (keyPressed > '0'-1){
-			return keyPressed - '0';
-		}
+		mode = va_arg(va, VICColorfadeMode_t);
+		//slide through is OK, here
+	case FGV_GET:
+		return mode;
 	}
+	va_end(va);
+}
+
+VICColorfadeMode_t fgvStartColor(fgvOperation_t op, ...){
+	static VICColorfadeTableElement_t startColor = 0;
+	va_list va;
+	va_start(va, op);
+	switch(op){
+	case FGV_SET:
+
+		startColor = va_arg(va, VICColorfadeTableElement_t);
+		//slide through is OK, here
+	case FGV_GET:
+		return startColor;
+	}
+	va_end(va);
+}
+
+VICColorfadeMode_t fgvEndColor(fgvOperation_t op, ...){
+	static VICColorfadeTableElement_t endColor = 1;
+	va_list va;
+	va_start(va, op);
+	switch(op){
+	case FGV_SET:
+		endColor = va_arg(va, VICColorfadeTableElement_t);
+		//slide through is OK, here
+	case FGV_GET:
+		return endColor;
+	}
+	va_end(va);
+}
+
+void menufncSetOldVIC(void){
+	fgvMode(FGV_SET, VICCOLORFADE_OLDVIC);
+}
+
+void menufncSetNewVIC(void){
+	fgvMode(FGV_SET, VICCOLORFADE_NEWVIC);
+}
+
+void menufncSetCharmode(void){
+	fgvMode(FGV_SET, VICCOLORFADE_CHARMODE);
+}
+
+void menufncRandDemo(void){
+}
+
+void menufncCustomFade(void){
+}
+
+void menufncSetStartColor(void){
+	uint8_t startColor;
+
+	gotoxy(0, 24);
+	cclear(40);
+	gotoxy(0, 24);
+	fputs("Startcolor?", stdout);
+	startColor = getNumKey();
+	putchar(startColor+'0');
+	fgvStartColor(FGV_SET, startColor);
+}
+
+void menufncSetEndColor(void){
+	uint8_t endColor;
+
+	gotoxy(0, 24);
+	cclear(40);
+	gotoxy(0, 24);
+	fputs("Endcolor?", stdout);
+	endColor = getNumKey();
+	putchar(endColor+'0');
+	fgvEndColor(FGV_SET, endColor);
+}
+
+void statusLine(void){
+	gotoxy(0, 24);
+	cclear(40);
+	gotoxy(0, 24);
+	printf("Mode: %d, Startcolor: %d, Endcolor: %d", fgvMode(FGV_GET), fgvStartColor(FGV_GET), fgvEndColor(FGV_GET));
+}
+
+int menu(void){
+	typedef struct{
+		char *title;
+		menufnc_t *callback;
+	} menu_t;
+
+	uint8_t NumberOfEntries, i;
+	char keyPressed;
+	static menu_t menuentries[] = {
+		{"Old VIC", menufncSetOldVIC},
+		{"New VIC", menufncSetNewVIC},
+		{"Charmode",menufncSetCharmode},
+		{"Start random demo",menufncRandDemo},
+		{"Start custom fade",menufncCustomFade},
+		{"Set start color",menufncSetStartColor},
+		{"Set end color",menufncSetEndColor},
+	};
+	//uint8_t x,y;
+
+	//wherey();
+	for (i = 0; i < sizeof(menuentries)/sizeof(menuentries[0]); ++i){
+		createChoice(menuentries[i].title);
+	}
+
+	while(true){
+		statusLine();
+
+		while(!kbhit());
+		keyPressed = cgetc();
+		if (keyPressed < '9'+1){
+			if (keyPressed > '0'-1){
+				menuentries[keyPressed - '0'].callback();
+				//return keyPressed - '0';
+			}
+		}
+
+	}
+
 	return -1;
 }
 
