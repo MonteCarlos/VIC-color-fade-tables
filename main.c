@@ -61,24 +61,26 @@ int createChoice(char *text){
 	return ++NumberOfChoices;
 }
 
-void fgvAssist(fgvOperation_t op, uint8_t N, void *src, void *dest){
-    static VICColorfadeMode_t mode = VICCOLORFADE_NEWVIC;
+void fgvAssist(fgvOperation_t op, uint8_t size, void *dest, ...){
+    //assert(N < 4); //for performance reasons copy only max 3 bytes
+	uint8_t i;
 	va_list va;
-	va_start(va, op);
+	va_start(va, dest);
+
 	switch(op){
 	case FGV_SET:
-
-		mode = va_arg(va, VICColorfadeMode_t);
+        for (i = size; i!=0; --i){
+            *((uint8_t*)dest)++ = va_arg(va, uint8_t);
+        }
 		//slide through is OK, here
-	case FGV_GET:
-		return mode;
 	}
 	va_end(va);
 }
 
-VICColorfadeMode_t fgvMode(fgvOperation_t op, ...){
+VICColorfadeMode_t fgvMode(fgvOperation_t op, VICColorfadeMode_t setmode){
 	static VICColorfadeMode_t mode = VICCOLORFADE_NEWVIC;
-	va_list va;
+	fgvAssist(op, sizeof(mode), &mode, setmode);
+	/*va_list va;
 	va_start(va, op);
 	switch(op){
 	case FGV_SET:
@@ -88,7 +90,7 @@ VICColorfadeMode_t fgvMode(fgvOperation_t op, ...){
 	case FGV_GET:
 		return mode;
 	}
-	va_end(va);
+	va_end(va);*/
 }
 
 VICColorfadeMode_t fgvStartColor(fgvOperation_t op, ...){
@@ -166,7 +168,7 @@ void statusLine(void){
 	gotoxy(0, 24);
 	cclear(40);
 	gotoxy(0, 24);
-	printf("Mode: %d, Startcolor: %d, Endcolor: %d", fgvMode(FGV_GET), fgvStartColor(FGV_GET), fgvEndColor(FGV_GET));
+	printf("Mode: %d, Startcolor: %d, Endcolor: %d", fgvMode(FGV_GET,0), fgvStartColor(FGV_GET), fgvEndColor(FGV_GET));
 }
 
 int menu(void){
