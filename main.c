@@ -8,7 +8,7 @@
 typedef void menufnc_t(void);
 typedef bool fgvOperation_t;
 enum FGVOPERATIONENUM{FGV_MINOP=-1, FGV_SET = true, FGV_GET = false, FGV_MAXOP=2};
-void randFader2(VICColorfade_t *vcf);
+
 #define ID(x) x
 #define _CONCAT(x,y) x##y
 #define CONCAT(x,y) _CONCAT(ID(x),ID(y))
@@ -61,40 +61,26 @@ int createChoice(char *text){
 	return ++NumberOfChoices;
 }
 
-void fgvAssist(fgvOperation_t op, uint8_t size, void *src, void* dest){
-    //assert(N < 4); //for performance reasons copy only max 3 bytes
-	//uint8_t i;
-    //va_list va;
-    //va_start(va, dest);
-    //(uint8_t*)dest += size-1;
-
+VICColorfadeMode_t fgvMode(fgvOperation_t op, ...){
+	static VICColorfadeMode_t mode = VICCOLORFADE_NEWVIC;
+	va_list va;
+	va_start(va, op);
 	switch(op){
 	case FGV_SET:
-        for (; size!=0; --size){
-            /*((uint8_t*)dest)++*/ *((uint8_t*)dest)++ = *((uint8_t*)src)++;//va_arg(va, uint8_t);
-            //++(uint8_t*)dest;
-        }
+
+		mode = va_arg(va, VICColorfadeMode_t);
 		//slide through is OK, here
+	case FGV_GET:
+		return mode;
 	}
-	//va_end(va);
-}
-
-VICColorfadeMode_t fgvMode(fgvOperation_t op, VICColorfadeMode_t desiredMode){
-	static VICColorfadeMode_t mode = VICCOLORFADE_NEWVIC;
-	//va_list va_start(va, op);
-
-	fgvAssist(op, sizeof(mode), &desiredMode, &mode);
-
-	return mode;
+	va_end(va);
 }
 
 VICColorfadeMode_t fgvStartColor(fgvOperation_t op, ...){
 	static VICColorfadeTableElement_t startColor = 0;
 	va_list va;
 	va_start(va, op);
-	fgvAssist(op, sizeof(startColor), &va_arg(va, VICColorfadeTableElement_t), &startColor);
-
-	/*switch(op){
+	switch(op){
 	case FGV_SET:
 
 		startColor = va_arg(va, VICColorfadeTableElement_t);
@@ -102,25 +88,21 @@ VICColorfadeMode_t fgvStartColor(fgvOperation_t op, ...){
 	case FGV_GET:
 		return startColor;
 	}
-	va_end(va);*/
-	return startColor;
+	va_end(va);
 }
 
 VICColorfadeMode_t fgvEndColor(fgvOperation_t op, ...){
 	static VICColorfadeTableElement_t endColor = 1;
 	va_list va;
 	va_start(va, op);
-	fgvAssist(op, sizeof(endColor), &va_arg(va, VICColorfadeTableElement_t), &endColor);
-
-	/*switch(op){
+	switch(op){
 	case FGV_SET:
 		endColor = va_arg(va, VICColorfadeTableElement_t);
 		//slide through is OK, here
 	case FGV_GET:
 		return endColor;
 	}
-	va_end(va);*/
-	return endColor;
+	va_end(va);
 }
 
 void menufncSetOldVIC(void){
@@ -136,12 +118,13 @@ void menufncSetCharmode(void){
 }
 
 void menufncRandDemo(void){
-    VICColorfade_t *vcf = VICColorfadeNew(0,0,fgvMode(FGV_GET,0),64);
+}
+
+void menufncCustomFade(void){
+	VICColorfade_t *vcf;
 	clock_t tick;
 
-    srand(time(NULL));
-
-    while(kbhit()) cgetc();
+	vcf = VICColorfadeNew(fgvStartColor(FGV_GET),fgvEndColor(FGV_GET),fgvMode(FGV_GET),64);
 
     while(!kbhit()){
 
@@ -150,7 +133,7 @@ void menufncRandDemo(void){
 		VIC.bgcolor0 = VICColorfadeGetNextColor(vcf);
 		if (VICColorfadeIsComplete(vcf)){
 			//tableFader(vcf);
-			randFader2(vcf);
+			VICColorfadeToggleColors(vcf);
 			//++endcolorIdx;
 			tick = clock();
 			while(abs(clock()-tick) < CLOCKS_PER_SEC);
@@ -159,10 +142,7 @@ void menufncRandDemo(void){
 		};
 
     }
-    VIC.bordercolor = VIC.bgcolor0 = 0;
-}
 
-void menufncCustomFade(void){
 }
 
 void menufncSetStartColor(void){
@@ -193,7 +173,7 @@ void statusLine(void){
 	gotoxy(0, 24);
 	cclear(40);
 	gotoxy(0, 24);
-	printf("Mode: %d, Startcolor: %d, Endcolor: %d", fgvMode(FGV_GET,0), fgvStartColor(FGV_GET), fgvEndColor(FGV_GET));
+	printf("Mode: %d, Startcolor: %d, Endcolor: %d", fgvMode(FGV_GET), fgvStartColor(FGV_GET), fgvEndColor(FGV_GET));
 }
 
 int menu(void){
@@ -221,16 +201,18 @@ int menu(void){
 	}
 
 	while(true){
+		VIC.bordercolor = VIC.bgcolor0 = 0;
 		statusLine();
 
-		while(!kbhit());
-		keyPressed = cgetc();
-		if (keyPressed < '9'+1){
-			if (keyPressed > '0'-1){
-				menuentries[keyPressed - '0'].callback();
+
+		//while(!kbhit());
+		//keyPressed = cgetc();
+		//if (keyPressed < '9'+1){
+			//if (keyPressed > '0'-1){
+		if ( (keyPressed = getNumKey()) < sizeof(menuentries)/sizeof(menuentries[0]) ) menuentries[keyPressed].callback();
 				//return keyPressed - '0';
-			}
-		}
+		//	}
+		//}
 
 	}
 

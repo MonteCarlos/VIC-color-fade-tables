@@ -25,5 +25,6 @@ VICColorfadeErrorNo_t VICColorfadeSetSpeed(VICColorfade_t *vcf, uint8_t speed);
 VICColorfadeErrorNo_t VICColorfadeSetMode(VICColorfade_t *vcf, uint8_t mode);
 VICColorfadeTableElement_t VICColorfadeGetNextColor(VICColorfade_t *vcf);
 VICColorfadeErrorNo_t VICColorfadeSetNewEndcolor(VICColorfade_t *vcf, uint8_t endcolor);
+VICColorfadeErrorNo_t VICColorfadeToggleColors(VICColorfade_t *vcf);
 
 #endif // VICCOLORFADE_H_INCLUDED

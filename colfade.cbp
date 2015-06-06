@@ -53,6 +53,9 @@
 		<Unit filename="VICColorfadeSetStartEnd.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="VICColorfadeToggleStartEndColor.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="VICColorfade_SetSpeed.c">
 			<Option compilerVar="CC" />
 		</Unit>
