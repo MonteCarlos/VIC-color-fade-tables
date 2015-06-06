@@ -8,7 +8,7 @@
 typedef void menufnc_t(void);
 typedef bool fgvOperation_t;
 enum FGVOPERATIONENUM{FGV_MINOP=-1, FGV_SET = true, FGV_GET = false, FGV_MAXOP=2};
-
+void randFader2(VICColorfade_t *vcf);
 #define ID(x) x
 #define _CONCAT(x,y) x##y
 #define CONCAT(x,y) _CONCAT(ID(x),ID(y))
@@ -61,43 +61,40 @@ int createChoice(char *text){
 	return ++NumberOfChoices;
 }
 
-void fgvAssist(fgvOperation_t op, uint8_t size, void *dest, ...){
+void fgvAssist(fgvOperation_t op, uint8_t size, void *src, void* dest){
     //assert(N < 4); //for performance reasons copy only max 3 bytes
-	uint8_t i;
-	va_list va;
-	va_start(va, dest);
+	//uint8_t i;
+    //va_list va;
+    //va_start(va, dest);
+    //(uint8_t*)dest += size-1;
 
 	switch(op){
 	case FGV_SET:
-        for (i = size; i!=0; --i){
-            *((uint8_t*)dest)++ = va_arg(va, uint8_t);
+        for (; size!=0; --size){
+            /*((uint8_t*)dest)++*/ *((uint8_t*)dest)++ = *((uint8_t*)src)++;//va_arg(va, uint8_t);
+            //++(uint8_t*)dest;
         }
 		//slide through is OK, here
 	}
-	va_end(va);
+	//va_end(va);
 }
 
-VICColorfadeMode_t fgvMode(fgvOperation_t op, VICColorfadeMode_t setmode){
+VICColorfadeMode_t fgvMode(fgvOperation_t op, VICColorfadeMode_t desiredMode){
 	static VICColorfadeMode_t mode = VICCOLORFADE_NEWVIC;
-	fgvAssist(op, sizeof(mode), &mode, setmode);
-	/*va_list va;
-	va_start(va, op);
-	switch(op){
-	case FGV_SET:
+	//va_list va_start(va, op);
 
-		mode = va_arg(va, VICColorfadeMode_t);
-		//slide through is OK, here
-	case FGV_GET:
-		return mode;
-	}
-	va_end(va);*/
+	fgvAssist(op, sizeof(mode), &desiredMode, &mode);
+
+	return mode;
 }
 
 VICColorfadeMode_t fgvStartColor(fgvOperation_t op, ...){
 	static VICColorfadeTableElement_t startColor = 0;
 	va_list va;
 	va_start(va, op);
-	switch(op){
+	fgvAssist(op, sizeof(startColor), &va_arg(va, VICColorfadeTableElement_t), &startColor);
+
+	/*switch(op){
 	case FGV_SET:
 
 		startColor = va_arg(va, VICColorfadeTableElement_t);
@@ -105,21 +102,25 @@ VICColorfadeMode_t fgvStartColor(fgvOperation_t op, ...){
 	case FGV_GET:
 		return startColor;
 	}
-	va_end(va);
+	va_end(va);*/
+	return startColor;
 }
 
 VICColorfadeMode_t fgvEndColor(fgvOperation_t op, ...){
 	static VICColorfadeTableElement_t endColor = 1;
 	va_list va;
 	va_start(va, op);
-	switch(op){
+	fgvAssist(op, sizeof(endColor), &va_arg(va, VICColorfadeTableElement_t), &endColor);
+
+	/*switch(op){
 	case FGV_SET:
 		endColor = va_arg(va, VICColorfadeTableElement_t);
 		//slide through is OK, here
 	case FGV_GET:
 		return endColor;
 	}
-	va_end(va);
+	va_end(va);*/
+	return endColor;
 }
 
 void menufncSetOldVIC(void){
@@ -135,6 +136,30 @@ void menufncSetCharmode(void){
 }
 
 void menufncRandDemo(void){
+    VICColorfade_t *vcf = VICColorfadeNew(0,0,fgvMode(FGV_GET,0),64);
+	clock_t tick;
+
+    srand(time(NULL));
+
+    while(kbhit()) cgetc();
+
+    while(!kbhit()){
+
+		while(VIC.ctrl1 < 128);
+		while(VIC.ctrl1 > 128);
+		VIC.bgcolor0 = VICColorfadeGetNextColor(vcf);
+		if (VICColorfadeIsComplete(vcf)){
+			//tableFader(vcf);
+			randFader2(vcf);
+			//++endcolorIdx;
+			tick = clock();
+			while(abs(clock()-tick) < CLOCKS_PER_SEC);
+			//while(!kbhit());
+			//cgetc();
+		};
+
+    }
+    VIC.bordercolor = VIC.bgcolor0 = 0;
 }
 
 void menufncCustomFade(void){
