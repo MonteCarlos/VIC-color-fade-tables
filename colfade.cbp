@@ -17,6 +17,9 @@
 				</Compiler>
 				<Linker>
 					<Add library="..\..\lib\carlos.lib" />
+					<Add library="..\..\lib\timer\timer.lib" />
+					<Add library="..\..\lib\raster\raster.lib" />
+					<Add library="..\..\lib\CBMKey\CBMKey.lib" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -30,6 +33,9 @@
 				</Compiler>
 				<Linker>
 					<Add library="..\..\lib\carlos.lib" />
+					<Add library="..\..\lib\timer\timer.lib" />
+					<Add library="..\..\lib\raster\raster.lib" />
+					<Add library="..\..\lib\CBMKey\CBMKey.lib" />
 				</Linker>
 			</Target>
 		</Build>

@@ -5,6 +5,7 @@
 #include <time.h>
 #include <timer/timer.h>
 #include <raster/raster.h>
+#include <CBMkey/cbmkey.h>
 
 #define FADEMINSTEP 4
 typedef void menufnc_t(void);
@@ -35,11 +36,10 @@ void randFader2(VICColorfade_t *vcf);
 
 extern uint8_t VICColorfadeTables[];
 
-char getNumKey(void){
+/*char getNumKey(void){
 	char keyPressed;
 
-	while(!kbhit());
-	keyPressed = cgetc();
+	keyPressed = cbm_getkey();
 	if (keyPressed < '9'+1){
 		if (keyPressed > '0'-1){
 			return keyPressed-'0';
@@ -47,6 +47,7 @@ char getNumKey(void){
 	}
 	return 255; //non valid key!
 }
+*/
 
 int createChoice(char *text){
 	static uint8_t NumberOfChoices = 0;
@@ -139,11 +140,10 @@ void menufncSetCharmode(void){
 
 void menufncRandDemo(void){
     VICColorfade_t *vcf = VICColorfadeNew(0,0,fgvMode(FGV_GET,0),64);
-	clock_t tick;
 
     srand(time(NULL));
 
-    while(kbhit()) cgetc();
+    cbm_flushKeyBuf();
 
     while(!kbhit()){
         waitretrace();
@@ -153,8 +153,7 @@ void menufncRandDemo(void){
 			//tableFader(vcf);
 			randFader2(vcf);
 			//++endcolorIdx;
-			tick = clock();
-			while(abs(clock()-tick) < CLOCKS_PER_SEC);
+			msDelay(1000);
 			//while(!kbhit());
 			//cgetc();
 		};
@@ -165,9 +164,10 @@ void menufncRandDemo(void){
 
 void menufncCustomFade(void){
 	VICColorfade_t *vcf;
-	clock_t tick;
 
 	vcf = VICColorfadeNew(fgvStartColor(FGV_GET),fgvEndColor(FGV_GET),fgvMode(FGV_GET,0),64);
+
+	cbm_flushKeyBuf();
 
     while(!kbhit()){
 
@@ -177,8 +177,7 @@ void menufncCustomFade(void){
 			//tableFader(vcf);
 			VICColorfadeToggleColors(vcf);
 			//++endcolorIdx;
-			tick = clock();
-			while(abs(clock()-tick) < CLOCKS_PER_SEC);
+			msDelay(1000);
 			//while(!kbhit());
 			//cgetc();
 		};
@@ -194,7 +193,7 @@ void menufncSetStartColor(void){
 	cclear(40);
 	gotoxy(0, 24);
 	fputs("Startcolor?", stdout);
-	startColor = getNumKey();
+	startColor = cbm_getNumKey();
 	putchar(startColor+'0');
 	fgvStartColor(FGV_SET, startColor);
 }
@@ -206,7 +205,7 @@ void menufncSetEndColor(void){
 	cclear(40);
 	gotoxy(0, 24);
 	fputs("Endcolor?", stdout);
-	endColor = getNumKey();
+	endColor = cbm_getNumKey();
 	putchar(endColor+'0');
 	fgvEndColor(FGV_SET, endColor);
 }
@@ -251,7 +250,7 @@ int menu(void){
 		//keyPressed = cgetc();
 		//if (keyPressed < '9'+1){
 			//if (keyPressed > '0'-1){
-		if ( (keyPressed = getNumKey()) < sizeof(menuentries)/sizeof(menuentries[0]) ) menuentries[keyPressed].callback();
+		if ( (keyPressed = cbm_getNumKey()) < sizeof(menuentries)/sizeof(menuentries[0]) ) menuentries[keyPressed].callback();
 				//return keyPressed - '0';
 		//	}
 		//}
