@@ -20,6 +20,7 @@
 					<Add library="..\..\lib\timer\timer.lib" />
 					<Add library="..\..\lib\raster\raster.lib" />
 					<Add library="..\..\lib\CBMKey\CBMKey.lib" />
+					<Add library="..\..\lib\conio\conio+.lib" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -36,6 +37,7 @@
 					<Add library="..\..\lib\timer\timer.lib" />
 					<Add library="..\..\lib\raster\raster.lib" />
 					<Add library="..\..\lib\CBMKey\CBMKey.lib" />
+					<Add library="..\..\lib\conio\conio+.lib" />
 				</Linker>
 			</Target>
 		</Build>

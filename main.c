@@ -6,6 +6,7 @@
 #include <timer/timer.h>
 #include <raster/raster.h>
 #include <CBMkey/cbmkey.h>
+#include <conio/conio+.h>
 
 #define FADEMINSTEP 4
 typedef void menufnc_t(void);
@@ -51,14 +52,14 @@ extern uint8_t VICColorfadeTables[];
 
 int createChoice(char *text){
 	static uint8_t NumberOfChoices = 0;
-	static char format[] = "%d: %s\n";
+	static char format[] = "%d: %s\n\r";
 
 	switch(NumberOfChoices){
 	case 10:
-		printf("Too many entries!");
+		cprintf("Too many entries!");
 		return -1;
 	default:
-		printf(format, NumberOfChoices, text);
+		cprintf(format, NumberOfChoices, text);
 	}
 
 	return ++NumberOfChoices;
@@ -189,10 +190,8 @@ void menufncCustomFade(void){
 void menufncSetStartColor(void){
 	uint8_t startColor;
 
-	gotoxy(0, 24);
-	cclear(40);
-	gotoxy(0, 24);
-	fputs("Startcolor?", stdout);
+	cclearline(24);
+	cputs("Startcolor?");
 	startColor = cbm_getNumKey();
 	putchar(startColor+'0');
 	fgvStartColor(FGV_SET, startColor);
@@ -201,20 +200,16 @@ void menufncSetStartColor(void){
 void menufncSetEndColor(void){
 	uint8_t endColor;
 
-	gotoxy(0, 24);
-	cclear(40);
-	gotoxy(0, 24);
-	fputs("Endcolor?", stdout);
+	cclearline(24);
+	cputs("Endcolor?");
 	endColor = cbm_getNumKey();
 	putchar(endColor+'0');
 	fgvEndColor(FGV_SET, endColor);
 }
 
 void statusLine(void){
-	gotoxy(0, 24);
-	cclear(40);
-	gotoxy(0, 24);
-	printf("Mode: %d, Startcolor: %d, Endcolor: %d", fgvMode(FGV_GET,0), fgvStartColor(FGV_GET), fgvEndColor(FGV_GET));
+	cclearline(24);
+	cprintf("Mode: %d, Startcolor: %d, Endcolor: %d", fgvMode(FGV_GET,0), fgvStartColor(FGV_GET), fgvEndColor(FGV_GET));
 }
 
 int menu(void){
