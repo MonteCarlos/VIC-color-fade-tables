@@ -265,20 +265,37 @@ void tableFader(VICColorfade_t *vcf){
 }
 
 void randFader2(VICColorfade_t *vcf){
+	typedef uint8_t endcolortable_t[][4];
 
 	//colortable contains four sections with 4 darkest colors, next 4 brighter colors, ..., 4 brightest colors
 	//fades are performed only between non adjacent sections
-	static uint8_t colortable[][4] = {{0,6,9,11},
+	static endcolortable_t colortable = {{0,6,9,11},
 									 {2,4,8,12},
 									 {14,10,5,15},
 									 {3,7,13,1}};
 
+	//same as above, but for charmode
+	static endcolortable_t colortable2 = {{0,6,0,0},
+									 {2,4,0,0},
+									 {3,5,0,0},
+									 {7,1,0,0}};
 	static uint8_t tableIdx=0;
 	unsigned int randNr, randNr2;
+	endcolortable_t *colortablePtr;
 
 	randNr = rand()/(RAND_MAX/2);//rand()%2;//
 	//(2*rand())/(RAND_MAX+1);
-	randNr2 = rand()/(RAND_MAX/4);//rand()%4;//
+
+	switch (vcf->mode){
+	case VICCOLORFADE_CHARMODE:
+		randNr2 = rand()/(RAND_MAX/2);
+		colortablePtr = &colortable2;
+		break;
+	default:
+		randNr2 = rand()/(RAND_MAX/4);
+		colortablePtr = &colortable;
+	}
+	//rand()%4;//
 	//(4*rand())/(RAND_MAX+1);
 
 	switch(tableIdx){
@@ -295,7 +312,7 @@ void randFader2(VICColorfade_t *vcf){
 		tableIdx = randNr;
 		break;
 	}
-	VICColorfadeSetNewEndcolor(vcf, colortable[tableIdx][randNr2]);
+	VICColorfadeSetNewEndcolor(vcf, colortablePtr[tableIdx][randNr2]);
 
 	//printf("%u, %u\n", randNr, randNr2);
 }
