@@ -14,6 +14,7 @@ typedef bool fgvOperation_t;
 enum FGVOPERATIONENUM{FGV_MINOP=-1, FGV_SET = true, FGV_GET = false, FGV_MAXOP=2};
 void randFader2(VICColorfade_t *vcf);
 void statusLine(void);
+uint8_t isError = 0;
 
 #define ID(x) x
 #define _CONCAT(x,y) x##y
@@ -51,6 +52,14 @@ extern uint8_t VICColorfadeTables[];
 	return 255; //non valid key!
 }
 */
+
+void setError(void){
+	isError = 1;
+}
+
+void clearError(void){
+	isError = 0;
+}
 
 int createChoice(char *text){
 	static uint8_t NumberOfChoices = 0;
@@ -219,8 +228,9 @@ void menufncSetEndColor(void){
 }
 
 void statusLine(void){
-	cclearline(24);
-	cprintf("Mode: %d, Startcolor: %d, Endcolor: %d", fgvMode(FGV_GET,0), fgvStartColor(FGV_GET), fgvEndColor(FGV_GET));
+	cclearline(23);
+	cprintf("Mode: %d, Startcolor: %d, Endcolor: %d\n\r", fgvMode(FGV_GET,0), fgvStartColor(FGV_GET), fgvEndColor(FGV_GET));
+	cprintf("Err: %d", isError);
 }
 
 int menu(void){
@@ -276,7 +286,7 @@ void tableFader(VICColorfade_t *vcf){
 }
 
 void randFader2(VICColorfade_t *vcf){
-	typedef uint8_t endcolortable_t[][4];
+	typedef uint8_t endcolortable_t[4][4];
 
 	//colortable contains four sections with 4 darkest colors, next 4 brighter colors, ..., 4 brightest colors
 	//fades are performed only between non adjacent sections
@@ -323,7 +333,9 @@ void randFader2(VICColorfade_t *vcf){
 		tableIdx = randNr;
 		break;
 	}
-	VICColorfadeSetNewEndcolor(vcf, (*colortablePtr)[tableIdx][randNr2]);
+	if (VICCOLORFADEERR_OK != VICColorfadeSetNewEndcolor(vcf, (*colortablePtr)[tableIdx][randNr2]) ){
+		setError();
+	};
 
 	//printf("%u, %u\n", randNr, randNr2);
 }
