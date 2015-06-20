@@ -140,7 +140,7 @@ void menufncSetCharmode(void){
 }
 
 void menufncRandDemo(void){
-    VICColorfade_t *vcf = VICColorfadeNew(0,0,fgvMode(FGV_GET,0),64);
+    VICColorfade_t *vcf = VICColorfadeNew(0,1,fgvMode(FGV_GET,0),64);
 
     srand(time(NULL));
 
@@ -281,7 +281,7 @@ void randFader2(VICColorfade_t *vcf){
 									 {7,1,0,0}};
 	static uint8_t tableIdx=0;
 	unsigned int randNr, randNr2;
-	endcolortable_t *colortablePtr;
+	endcolortable_t *colortablePtr = &colortable;
 
 	randNr = rand()/(RAND_MAX/2);//rand()%2;//
 	//(2*rand())/(RAND_MAX+1);
@@ -293,7 +293,7 @@ void randFader2(VICColorfade_t *vcf){
 		break;
 	default:
 		randNr2 = rand()/(RAND_MAX/4);
-		colortablePtr = &colortable;
+		//colortablePtr = &colortable;
 	}
 	//rand()%4;//
 	//(4*rand())/(RAND_MAX+1);
@@ -312,7 +312,7 @@ void randFader2(VICColorfade_t *vcf){
 		tableIdx = randNr;
 		break;
 	}
-	VICColorfadeSetNewEndcolor(vcf, colortablePtr[tableIdx][randNr2]);
+	VICColorfadeSetNewEndcolor(vcf, (*colortablePtr)[tableIdx][randNr2]);
 
 	//printf("%u, %u\n", randNr, randNr2);
 }
