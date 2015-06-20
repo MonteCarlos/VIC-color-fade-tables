@@ -13,6 +13,8 @@ typedef void menufnc_t(void);
 typedef bool fgvOperation_t;
 enum FGVOPERATIONENUM{FGV_MINOP=-1, FGV_SET = true, FGV_GET = false, FGV_MAXOP=2};
 void randFader2(VICColorfade_t *vcf);
+void statusLine(void);
+
 #define ID(x) x
 #define _CONCAT(x,y) x##y
 #define CONCAT(x,y) _CONCAT(ID(x),ID(y))
@@ -140,7 +142,11 @@ void menufncSetCharmode(void){
 }
 
 void menufncRandDemo(void){
-    VICColorfade_t *vcf = VICColorfadeNew(0,1,fgvMode(FGV_GET,0),64);
+    VICColorfade_t *vcf = VICColorfadeNew(0,0,fgvMode(FGV_GET,0),64);
+	uint8_t oldStartcolor = fgvStartColor(FGV_GET);
+	uint8_t oldEndcolor = fgvEndColor(FGV_GET);
+
+	statusLine();
 
     srand(time(NULL));
 
@@ -153,6 +159,9 @@ void menufncRandDemo(void){
 		if (VICColorfadeIsComplete(vcf)){
 			//tableFader(vcf);
 			randFader2(vcf);
+			fgvStartColor(FGV_SET, vcf->startcolor);
+			fgvEndColor(FGV_SET, vcf->endcolor);
+			statusLine();
 			//++endcolorIdx;
 			msDelay(1000);
 			//while(!kbhit());
@@ -161,6 +170,8 @@ void menufncRandDemo(void){
 
     }
     VIC.bordercolor = VIC.bgcolor0 = 0;
+    fgvStartColor(FGV_SET, oldStartcolor);
+	fgvEndColor(FGV_SET, oldEndcolor);
 }
 
 void menufncCustomFade(void){
