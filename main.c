@@ -302,20 +302,12 @@ void randFader2(VICColorfade_t *vcf){
 									 {7,1,0,0}};
 	static uint8_t tableIdx=0;
 	unsigned int randNr, randNr2;
-	endcolortable_t *colortablePtr = &colortable;
+	uint8_t *colortablePtr;
 
 	randNr = rand()/(RAND_MAX/2);//rand()%2;//
 	//(2*rand())/(RAND_MAX+1);
 
-	switch (vcf->mode){
-	case VICCOLORFADE_CHARMODE:
-		randNr2 = rand()/(RAND_MAX/2);
-		colortablePtr = &colortable2;
-		break;
-	default:
-		randNr2 = rand()/(RAND_MAX/4);
-		//colortablePtr = &colortable;
-	}
+
 	//rand()%4;//
 	//(4*rand())/(RAND_MAX+1);
 
@@ -333,7 +325,18 @@ void randFader2(VICColorfade_t *vcf){
 		tableIdx = randNr;
 		break;
 	}
-	if (VICCOLORFADEERR_OK != VICColorfadeSetNewEndcolor(vcf, (*colortablePtr)[tableIdx][randNr2]) ){
+
+	switch (vcf->mode){
+	case VICCOLORFADE_CHARMODE:
+		randNr2 = rand()/(RAND_MAX/2);
+		colortablePtr = &colortable2[tableIdx][randNr2];
+		break;
+	default:
+		randNr2 = rand()/(RAND_MAX/4);
+		colortablePtr = &colortable[tableIdx][randNr2];
+	}
+
+	if (VICCOLORFADEERR_OK != VICColorfadeSetNewEndcolor(vcf, *colortablePtr ) ){
 		setError();
 	};
 
