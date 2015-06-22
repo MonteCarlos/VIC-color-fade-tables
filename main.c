@@ -105,37 +105,33 @@ VICColorfadeMode_t fgvMode(fgvOperation_t op, VICColorfadeMode_t desiredMode){
 
 VICColorfadeMode_t fgvStartColor(fgvOperation_t op, ...){
 	static VICColorfadeTableElement_t startColor = 0;
+	static VICColorfadeTableElement_t startColorcm = 0;
 	va_list va;
 	va_start(va, op);
-	fgvAssist(op, sizeof(startColor), &va_arg(va, VICColorfadeTableElement_t), &startColor);
-
-	/*switch(op){
-	case FGV_SET:
-
-		startColor = va_arg(va, VICColorfadeTableElement_t);
-		//slide through is OK, here
-	case FGV_GET:
+	switch(fgvMode(FGV_GET,0)){
+	case VICCOLORFADE_CHARMODE:
+		fgvAssist(op, sizeof(startColorcm), &va_arg(va, VICColorfadeTableElement_t), &startColorcm);
+		return startColorcm;
+	default:
+		fgvAssist(op, sizeof(startColor), &va_arg(va, VICColorfadeTableElement_t), &startColor);
 		return startColor;
 	}
-	va_end(va);*/
-	return startColor;
 }
 
 VICColorfadeMode_t fgvEndColor(fgvOperation_t op, ...){
 	static VICColorfadeTableElement_t endColor = 1;
+	static VICColorfadeTableElement_t endColorcm = 1;
+
 	va_list va;
 	va_start(va, op);
-	fgvAssist(op, sizeof(endColor), &va_arg(va, VICColorfadeTableElement_t), &endColor);
-
-	/*switch(op){
-	case FGV_SET:
-		endColor = va_arg(va, VICColorfadeTableElement_t);
-		//slide through is OK, here
-	case FGV_GET:
+	switch(fgvMode(FGV_GET,0)){
+	case VICCOLORFADE_CHARMODE:
+		fgvAssist(op, sizeof(endColorcm), &va_arg(va, VICColorfadeTableElement_t), &endColorcm);
+		return endColorcm;
+	default:
+		fgvAssist(op, sizeof(endColor), &va_arg(va, VICColorfadeTableElement_t), &endColor);
 		return endColor;
 	}
-	va_end(va);*/
-	return endColor;
 }
 
 void menufncSetOldVIC(void){
@@ -230,6 +226,7 @@ void menufncSetEndColor(void){
 void statusLine(void){
 	cclearline(23);
 	cprintf("Mode: %d, Startcolor: %d, Endcolor: %d\n\r", fgvMode(FGV_GET,0), fgvStartColor(FGV_GET), fgvEndColor(FGV_GET));
+	cclearline(24);
 	cprintf("Err: %d", isError);
 }
 
