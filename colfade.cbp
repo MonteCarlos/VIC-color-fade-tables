@@ -45,6 +45,9 @@
 		<Unit filename="VICColorfadeCalcReadPtr.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="VICColorfadeCheckColorValue.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="VICColorfadeGetNextColor.c">
 			<Option compilerVar="CC" />
 		</Unit>
