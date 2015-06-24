@@ -1,3 +1,5 @@
+#include "VICColorfade_internal.h"
+
 bool VICColorfadeCheckColorValue(VICColorfadeMode_t mode, VICColorfadeTableElement_t color){
     VICColorfadeTableElement_t maxColorValue = VICCOLORFADE_CHARMODE==mode?7:15;
 

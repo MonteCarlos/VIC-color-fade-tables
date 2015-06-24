@@ -1,7 +1,7 @@
 #include "VICColorfade_internal.h"
 
 VICColorfadeErrorNo_t VICColorfadeSetNewEndcolor(VICColorfade_t *vcf, uint8_t endcolor){
-	if (VICColorfadeCheckColorValue(endcolor)){
+	if (VICColorfadeCheckColorValue(vcf->mode, endcolor)){
 		vcf->startcolor = vcf->endcolor;
 		vcf->endcolor = endcolor;
 	}

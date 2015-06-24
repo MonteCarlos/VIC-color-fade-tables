@@ -218,9 +218,12 @@ void menufncSetEndColor(void){
 
 	cclearline(24);
 	cputs("Endcolor?");
-	endColor = cbm_getNumKey();
-	putchar(endColor+'0');
-	fgvEndColor(FGV_SET, endColor);
+	if (VICColorfadeCheckColorValue(fgvMode(FGV_GET,0), endColor = cbm_getNumKey())){
+        putchar(endColor+'0');
+        fgvEndColor(FGV_SET, endColor);
+	}else{
+        putchar('\a');
+	}
 }
 
 void statusLine(void){

@@ -25,7 +25,7 @@ typedef struct VICColorfade_tag  VICColorfade_t;
 typedef enum VICColorfadeMode_tag VICColorfadeMode_t;
 //typedef enum VICColorfadeErrorno_tag VICColorfadeErrorno_t;
 typedef int8_t VICColorfadeErrorNo_t;
-typedef char[] VICColorfadeErrorMsg_t;
+typedef char VICColorfadeErrorMsg_t[];
 
 VICColorfade_t *VICColorfadeNew(uint8_t startcolor, uint8_t endcolor, VICColorfadeMode_t mode, uint8_t speed);
 VICColorfade_t *VICColorfadeObjAlloc(void);
@@ -35,5 +35,6 @@ VICColorfadeErrorNo_t VICColorfadeSetMode(VICColorfade_t *vcf, uint8_t mode);
 VICColorfadeTableElement_t VICColorfadeGetNextColor(VICColorfade_t *vcf);
 VICColorfadeErrorNo_t VICColorfadeSetNewEndcolor(VICColorfade_t *vcf, uint8_t endcolor);
 VICColorfadeErrorNo_t VICColorfadeToggleColors(VICColorfade_t *vcf);
+bool VICColorfadeCheckColorValue(VICColorfadeMode_t mode, VICColorfadeTableElement_t color);
 
 #endif // VICCOLORFADE_H_INCLUDED
