@@ -17,11 +17,6 @@
 		VICCOLORFADE_CHARMODE,
 	};
 
-	enum VICColorfadeState_tag{
-		VICCOLORFADE_NOTSTARTED,
-		VICCOLORFADE_INCOMPLETE,
-		VICCOLORFADE_COMPLETE
-	};
 
 	struct VICColorfade_tag{
 		uint8_t startcolor;
@@ -33,6 +28,8 @@
 		VICColorfadeMode_t mode;
 
 		uint8_t *elementPtr;
+		VICColorfadeErrorNo_t errorNo;
+		VICColorfadeErrorMsg_t *errorMsg;
 	};
 
 	VICColorfadeErrorNo_t VICColorfadeSetReadPtr(VICColorfade_t *vcf, VICColorfadeTableElement_t *addr);

@@ -1,9 +1,6 @@
 bool VICColorfadeCheckColorValue(VICColorfadeMode_t mode, VICColorfadeTableElement_t color){
-if (endcolor<16){
-		vcf->startcolor = vcf->endcolor;
-		vcf->endcolor = endcolor;
-	}
-	else return VICCOLORFADEERR_CHARMODEANDCOLORGT7;
+    VICColorfadeTableElement_t maxColorValue = VICCOLORFADE_CHARMODE==mode?7:15;
 
+    return color <= maxColorValue;
 }
 
