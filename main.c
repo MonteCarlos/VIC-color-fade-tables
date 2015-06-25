@@ -15,6 +15,8 @@ enum FGVOPERATIONENUM{FGV_MINOP=-1, FGV_SET = true, FGV_GET = false, FGV_MAXOP=2
 void randFader2(VICColorfade_t *vcf);
 void statusLine(void);
 uint8_t isError = 0;
+char nullStr[] = "";
+char* errMsg = nullStr;
 
 #define ID(x) x
 #define _CONCAT(x,y) x##y
@@ -53,12 +55,21 @@ extern uint8_t VICColorfadeTables[];
 }
 */
 
+
+
 void setError(void){
+    errMsg = nullStr; //no msg given, so clear it and only indicate error
 	isError = 1;
 }
 
 void clearError(void){
+    errMsg = nullStr; //clear error indicator and msg
 	isError = 0;
+}
+
+void setErrorMsg(char* msg){
+	setError(); //set error indicator and message
+	errMsg = msg;
 }
 
 int createChoice(char *text){
@@ -222,6 +233,7 @@ void menufncSetEndColor(void){
         putchar(endColor+'0');
         fgvEndColor(FGV_SET, endColor);
 	}else{
+	    setErrorMsg("Color value error");
         putchar('\a');
 	}
 }
@@ -230,7 +242,7 @@ void statusLine(void){
 	cclearline(23);
 	cprintf("Mode: %d, Startcolor: %d, Endcolor: %d\n\r", fgvMode(FGV_GET,0), fgvStartColor(FGV_GET), fgvEndColor(FGV_GET));
 	cclearline(24);
-	cprintf("Err: %d", isError);
+	cprintf("Err: %d, %s", isError, errMsg);
 }
 
 int menu(void){
