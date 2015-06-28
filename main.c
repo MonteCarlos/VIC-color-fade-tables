@@ -38,7 +38,9 @@ char* errMsg = nullStr;
 
 #pragma charmap('_', ' ')
 
-
+#define ERRMSGLIST(LE) LE(ok), LE(color_out_of_range)
+#define ERRMSG_GENENUM(x) CONCAT(ERRMSG_, x)
+enum {ERRMSGLIST(ERRMSG_GENENUM)} ERRMSGTAGS;
 
 extern uint8_t VICColorfadeTables[];
 
@@ -56,6 +58,13 @@ extern uint8_t VICColorfadeTables[];
 */
 
 
+bool wasError(){
+    return isError;
+}
+
+bool wasNoError(){
+    return !isError;
+}
 
 void setError(void){
     errMsg = nullStr; //no msg given, so clear it and only indicate error
@@ -114,12 +123,9 @@ VICColorfadeMode_t fgvMode(fgvOperation_t op, VICColorfadeMode_t desiredMode){
 	return mode;
 }
 
-VICColorfadeMode_t fgvStartColor(fgvOperation_t op, ...){
-	static VICColorfadeTableElement_t startColor = 0;
-	static VICColorfadeTableElement_t startColorcm = 0;
-	va_list va;
-	va_start(va, op);
-	switch(fgvMode(FGV_GET,0)){
+/*
+VICColorfadeTableElement_t fgvColor(fgvOperation_t op, VICColorfadeTableElement_t *value, VICColorfadeTableElement_t *dest){
+    switch(fgvMode(FGV_GET,0)){
 	case VICCOLORFADE_CHARMODE:
 		fgvAssist(op, sizeof(startColorcm), &va_arg(va, VICColorfadeTableElement_t), &startColorcm);
 		return startColorcm;
@@ -127,22 +133,53 @@ VICColorfadeMode_t fgvStartColor(fgvOperation_t op, ...){
 		fgvAssist(op, sizeof(startColor), &va_arg(va, VICColorfadeTableElement_t), &startColor);
 		return startColor;
 	}
-}
 
-VICColorfadeMode_t fgvEndColor(fgvOperation_t op, ...){
-	static VICColorfadeTableElement_t endColor = 1;
-	static VICColorfadeTableElement_t endColorcm = 1;
+}*/
+
+VICColorfadeTableElement_t fgvStartColor(fgvOperation_t op, ...){
+	static VICColorfadeTableElement_t startColor = 0;
+	static VICColorfadeTableElement_t startColorcm = 0;
+    VICColorfadeTableElement_t *colorPtr = (fgvMode(FGV_GET,0)==VICCOLORFADE_CHARMODE)?&startColorcm:&startColor;
 
 	va_list va;
 	va_start(va, op);
-	switch(fgvMode(FGV_GET,0)){
-	case VICCOLORFADE_CHARMODE:
-		fgvAssist(op, sizeof(endColorcm), &va_arg(va, VICColorfadeTableElement_t), &endColorcm);
-		return endColorcm;
-	default:
-		fgvAssist(op, sizeof(endColor), &va_arg(va, VICColorfadeTableElement_t), &endColor);
-		return endColor;
+
+	switch(op){
+    case FGV_SET:
+        {
+            VICColorfadeTableElement_t colorParam = va_arg(va, VICColorfadeTableElement_t);
+            if(VICColorfadeCheckColorValue(fgvMode(FGV_GET,0), colorParam)){
+                *colorPtr = colorParam;
+            }else{
+                setErrorMsg("Color value error");
+            }
+        }
 	}
+
+	return *colorPtr;
+}
+
+VICColorfadeTableElement_t fgvEndColor(fgvOperation_t op, ...){
+	static VICColorfadeTableElement_t endColor = 1;
+	static VICColorfadeTableElement_t endColorcm = 1;
+    VICColorfadeTableElement_t *colorPtr = (fgvMode(FGV_GET,0)==VICCOLORFADE_CHARMODE)?&endColorcm:&endColor;
+
+	va_list va;
+	va_start(va, op);
+
+	switch(op){
+    case FGV_SET:
+        {
+            VICColorfadeTableElement_t colorParam = va_arg(va, VICColorfadeTableElement_t);
+            if(VICColorfadeCheckColorValue(fgvMode(FGV_GET,0), colorParam)){
+                *colorPtr = colorParam;
+            }else{
+                setErrorMsg("Color value error");
+            }
+        }
+	}
+
+	return *colorPtr;
 }
 
 void menufncSetOldVIC(void){
@@ -215,27 +252,23 @@ void menufncCustomFade(void){
 }
 
 void menufncSetStartColor(void){
-	uint8_t startColor;
+	VICColorfadeTableElement_t startColor;
 
 	cclearline(24);
 	cputs("Startcolor?");
 	startColor = cbm_getNumKey();
-	putchar(startColor+'0');
-	fgvStartColor(FGV_SET, startColor);
+
+	putchar(fgvStartColor(FGV_SET, startColor)+'0');
 }
 
 void menufncSetEndColor(void){
-	uint8_t endColor;
+	VICColorfadeTableElement_t endColor;
 
 	cclearline(24);
 	cputs("Endcolor?");
-	if (VICColorfadeCheckColorValue(fgvMode(FGV_GET,0), endColor = cbm_getNumKey())){
-        putchar(endColor+'0');
-        fgvEndColor(FGV_SET, endColor);
-	}else{
-	    setErrorMsg("Color value error");
-        putchar('\a');
-	}
+    endColor = cbm_getNumKey();
+
+    putchar(fgvEndColor(FGV_SET, endColor)+'0');
 }
 
 void statusLine(void){
@@ -243,6 +276,7 @@ void statusLine(void){
 	cprintf("Mode: %d, Startcolor: %d, Endcolor: %d\n\r", fgvMode(FGV_GET,0), fgvStartColor(FGV_GET), fgvEndColor(FGV_GET));
 	cclearline(24);
 	cprintf("Err: %d, %s", isError, errMsg);
+	clearError();
 }
 
 int menu(void){
