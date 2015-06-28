@@ -38,9 +38,13 @@ char* errMsg = nullStr;
 
 #pragma charmap('_', ' ')
 
-#define ERRMSGLIST(LE) LE(ok), LE(color_out_of_range)
-#define ERRMSG_GENENUM(x) CONCAT(ERRMSG_, x)
-enum {ERRMSGLIST(ERRMSG_GENENUM)} ERRMSGTAGS;
+#define ERRMSGLIST LE(ok), LE(color_out_of_range)
+#define LE(x) CONCAT(ERRMSG_,x)
+enum {ERRMSGLIST} ERRMSGTAGS;
+#undef LE
+#define LE(x) #x
+char *errmsgs[] = {ERRMSGLIST};
+#undef LE
 
 extern uint8_t VICColorfadeTables[];
 
