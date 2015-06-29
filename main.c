@@ -7,6 +7,7 @@
 #include <raster/raster.h>
 #include <CBMkey/cbmkey.h>
 #include <conio/conio+.h>
+#include <conversion/asc2hex8.h>
 
 #define FADEMINSTEP 4
 typedef void menufnc_t(void);
@@ -14,9 +15,7 @@ typedef bool fgvOperation_t;
 enum FGVOPERATIONENUM{FGV_MINOP=-1, FGV_SET = true, FGV_GET = false, FGV_MAXOP=2};
 void randFader2(VICColorfade_t *vcf);
 void statusLine(void);
-uint8_t isError = 0;
-char nullStr[] = "";
-char* errMsg = nullStr;
+
 
 #define ID(x) x
 #define _CONCAT(x,y) x##y
@@ -38,15 +37,18 @@ char* errMsg = nullStr;
 
 #pragma charmap('_', ' ')
 
-#define ERRMSGLIST LE(ok), LE(color_out_of_range)
+#define ERRMSGLIST LE(invalid_key), LE(color_out_of_range)
 #define LE(x) CONCAT(ERRMSG_,x)
 enum {ERRMSGLIST} ERRMSGTAGS;
 #undef LE
 #define LE(x) #x
-char *errmsgs[] = {ERRMSGLIST};
+static char *errmsgs[] = {ERRMSGLIST};
 #undef LE
 
 extern uint8_t VICColorfadeTables[];
+uint8_t isError = 0;
+char noErrStr[] = "no error";
+char* errMsg = noErrStr;
 
 /*char getNumKey(void){
 	char keyPressed;
@@ -71,18 +73,26 @@ bool wasNoError(){
 }
 
 void setError(void){
-    errMsg = nullStr; //no msg given, so clear it and only indicate error
+    errMsg = noErrStr; //no msg given, so clear it and only indicate error
 	isError = 1;
 }
 
 void clearError(void){
-    errMsg = nullStr; //clear error indicator and msg
+    errMsg = noErrStr; //clear error indicator and msg
 	isError = 0;
 }
 
 void setErrorMsg(char* msg){
 	setError(); //set error indicator and message
 	errMsg = msg;
+}
+
+uint8_t getKeybHex4Value(void){
+    uint8_t val = asc2hex8(cbm_getkey());
+    switch(val){
+        case 255: setErrorMsg(errmsgs[ERRMSG_invalid_key]);
+        default: return val;
+    }
 }
 
 int createChoice(char *text){
@@ -100,6 +110,8 @@ int createChoice(char *text){
 	return ++NumberOfChoices;
 }
 
+//fgvTest(fgvOperation_t op, uint8_t size, void* va_init, va_list va)
+//fgvColor()
 void fgvAssist(fgvOperation_t op, uint8_t size, void *src, void* dest){
     //assert(N < 4); //for performance reasons copy only max 3 bytes
 	//uint8_t i;
@@ -155,7 +167,7 @@ VICColorfadeTableElement_t fgvStartColor(fgvOperation_t op, ...){
             if(VICColorfadeCheckColorValue(fgvMode(FGV_GET,0), colorParam)){
                 *colorPtr = colorParam;
             }else{
-                setErrorMsg("Color value error");
+                setErrorMsg(errmsgs[ERRMSG_color_out_of_range]);
             }
         }
 	}
@@ -178,7 +190,7 @@ VICColorfadeTableElement_t fgvEndColor(fgvOperation_t op, ...){
             if(VICColorfadeCheckColorValue(fgvMode(FGV_GET,0), colorParam)){
                 *colorPtr = colorParam;
             }else{
-                setErrorMsg("Color value error");
+                setErrorMsg(errmsgs[ERRMSG_color_out_of_range]);
             }
         }
 	}
@@ -260,9 +272,10 @@ void menufncSetStartColor(void){
 
 	cclearline(24);
 	cputs("Startcolor?");
-	startColor = cbm_getNumKey();
-
-	putchar(fgvStartColor(FGV_SET, startColor)+'0');
+	switch(startColor = getKeybHex4Value()){
+        case 255: break;
+        default: printf("%d", fgvStartColor(FGV_SET, startColor));
+    }
 }
 
 void menufncSetEndColor(void){
@@ -270,9 +283,10 @@ void menufncSetEndColor(void){
 
 	cclearline(24);
 	cputs("Endcolor?");
-    endColor = cbm_getNumKey();
-
-    putchar(fgvEndColor(FGV_SET, endColor)+'0');
+    switch(endColor = getKeybHex4Value()){
+        case 255: break;
+        default: printf("%d", fgvEndColor(FGV_SET, endColor));
+    }
 }
 
 void statusLine(void){

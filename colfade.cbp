@@ -40,6 +40,7 @@
 					<Add library="..\..\lib\raster\raster.lib" />
 					<Add library="..\..\lib\CBMKey\CBMKey.lib" />
 					<Add library="..\..\lib\conio\conio+.lib" />
+					<Add library="..\..\lib\conversion.lib" />
 				</Linker>
 			</Target>
 		</Build>
