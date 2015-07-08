@@ -2,9 +2,14 @@
 #define VICCOLORFADE_INTERNAL_H_INCLUDED
 
 	#include "VICColorfade.h"
-	#define ccAlloc(size) malloc(size)
-	#define ccFree(ptr) free(ptr)
-
+	#ifdef UTEST
+        #define ccAlloc(size) CuAlloc(size)
+        #define ccFree(ptr) CuFree(ptr)
+        #include <CuAlloc/CuAlloc.h>
+    #else
+        #define ccAlloc(size) malloc(size)
+        #define ccFree(ptr) free(ptr)
+    #endif
 
 	extern VICColorfadeTableElement_t VICColorfadeTables[];
 	typedef int8_t VICColorfadeState_t;

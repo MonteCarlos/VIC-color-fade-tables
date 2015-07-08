@@ -43,6 +43,29 @@
 					<Add library="..\..\lib\conversion.lib" />
 				</Linker>
 			</Target>
+			<Target title="UTest">
+				<Option output="colfade_tests.prg" prefix_auto="0" extension_auto="0" />
+				<Option object_output="gcc/obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="cc65" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-DUTEST" />
+					<Add directory="../../include" />
+					<Add directory="../../../include" />
+					<Add directory="../../../EigeneCProgramme/CuTest" />
+				</Compiler>
+				<Linker>
+					<Add library="..\..\lib\carlos.lib" />
+					<Add library="..\..\lib\timer\timer.lib" />
+					<Add library="..\..\lib\raster\raster.lib" />
+					<Add library="..\..\lib\CBMKey\CBMKey.lib" />
+					<Add library="..\..\lib\conio\conio+.lib" />
+					<Add library="..\..\..\EigeneCProgramme\CuTest\cutest-cc65_Dbg.lib" />
+					<Add library="..\..\..\EigeneCProgramme\CuTest\CuAlloc\CuAllocDbg.lib" />
+					<Add library="..\..\..\EigeneCProgramme\CuTest\CuString\CutestString-cc65Dbg.lib" />
+				</Linker>
+			</Target>
 		</Build>
 		<Unit filename="VICColorfade.h" />
 		<Unit filename="VICColorfadeCalcReadPtr.c">
@@ -82,9 +105,15 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="VICColorfade_internal.h" />
+		<Unit filename="VICColorfade_tests.c">
+			<Option compilerVar="CC" />
+			<Option target="UTest" />
+		</Unit>
 		<Unit filename="coltab.s" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
+			<Option target="Debug" />
+			<Option target="Release" />
 		</Unit>
 		<Extensions>
 			<code_completion />
