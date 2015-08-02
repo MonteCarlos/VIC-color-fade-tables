@@ -13,7 +13,7 @@
 
 	extern VICColorfadeTableElement_t VICColorfadeTables[];
 	typedef int8_t VICColorfadeState_t;
-
+    typedef bool ccFree_t;
 
 	//Enums should not emit values out of -128..127
 	enum VICColorfadeMode_tag{
@@ -40,4 +40,5 @@
 	VICColorfadeErrorNo_t VICColorfadeSetReadPtr(VICColorfade_t *vcf, VICColorfadeTableElement_t *addr);
 	VICColorfadeErrorNo_t VICColorfadeCalcReadPtr(VICColorfade_t *vcf);
 	bool VICColorfadeIsComplete(VICColorfade_t *vcf);
+	bool VICColorfadeObjDelete(VICColorfade_t *vcf);
 #endif // __VICCOLORFADE_INTERNAL_H__

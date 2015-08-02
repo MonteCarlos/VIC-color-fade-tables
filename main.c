@@ -303,7 +303,7 @@ int menu(void){
 		menufnc_t *callback;
 	} menu_t;
 
-	uint8_t NumberOfEntries, i;
+	uint8_t i;
 	char keyPressed;
 	static menu_t menuentries[] = {
 		{"Old VIC", menufncSetOldVIC},
