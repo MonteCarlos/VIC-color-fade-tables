@@ -11,7 +11,8 @@ typedef uint8_t VICColorfadeTableElement_t;
 enum VICColorfadeErrorNo_tag{
 	VICCOLORFADEERR_OK = 0,
 	VICCOLORFADEERR_CHARMODEANDCOLORGT7, //charmode only allows colors from 0..7
-	VICCOLORFADEERR_CVALUE //common error on color value (>15 or >7 dependent on mode)
+	VICCOLORFADEERR_CVALUE, //common error on color value (>15 or >7 dependent on mode)
+    VICCOLORFADEERR_ILLMODE
 };
 
 enum VICColorfadeState_tag{

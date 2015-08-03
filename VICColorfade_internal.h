@@ -17,9 +17,11 @@
 
 	//Enums should not emit values out of -128..127
 	enum VICColorfadeMode_tag{
-		VICCOLORFADE_OLDVIC,
+	    VICCOLORFADE_MODE_MIN,
+		VICCOLORFADE_OLDVIC = VICCOLORFADE_MODE_MIN,
 		VICCOLORFADE_NEWVIC,
 		VICCOLORFADE_CHARMODE,
+		VICCOLORFADE_MODE_MAX = VICCOLORFADE_CHARMODE
 	};
 
 
@@ -41,4 +43,6 @@
 	VICColorfadeErrorNo_t VICColorfadeCalcReadPtr(VICColorfade_t *vcf);
 	bool VICColorfadeIsComplete(VICColorfade_t *vcf);
 	bool VICColorfadeObjDelete(VICColorfade_t *vcf);
+    bool VICColorfadeCheckMode(VICColorfadeMode_t mode);
+
 #endif // __VICCOLORFADE_INTERNAL_H__
