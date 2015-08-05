@@ -12,6 +12,7 @@ VICColorfadeErrorNo_t VICColorfadeCalcReadPtr(VICColorfade_t *vcf){
 		case VICCOLORFADE_OLDVIC:
 			tableOffset += 128;
 			break;
+        default: break;
 		}
 	}else{
 		tableOffset += (16*8+16*8+8*8)*8+256*(vcf->endcolor-8);
@@ -19,6 +20,7 @@ VICColorfadeErrorNo_t VICColorfadeCalcReadPtr(VICColorfade_t *vcf){
 		case VICCOLORFADE_OLDVIC:
 			tableOffset += 128;
 			break;
+        default: break;
 		}
 	}
 	VICColorfadeSetReadPtr(vcf, tableOffset+VICColorfadeTables);

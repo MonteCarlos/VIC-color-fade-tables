@@ -66,12 +66,37 @@
 					<Add library="..\..\..\EigeneCProgramme\CuTest\CuString\CutestString-cc65Dbg.lib" />
 				</Linker>
 			</Target>
+			<Target title="Gcc Utest">
+				<Option output="colfade_tests" prefix_auto="1" extension_auto="1" />
+				<Option object_output="gcc/obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="clang" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DUTEST" />
+					<Add directory="../../include" />
+					<Add directory="../../../include" />
+					<Add directory="../../../EigeneCProgramme/CuTest" />
+				</Compiler>
+				<Linker>
+					<Add library="..\..\..\EigeneCProgramme\CuTest\libcutest.a" />
+					<Add library="..\..\..\EigeneCProgramme\CuTest\CuAlloc\libCuAlloc.a" />
+					<Add library="..\..\..\EigeneCProgramme\CuTest\CuString\libCutestString-cc65.a" />
+				</Linker>
+				<ExtraCommands>
+					<Add after="cmd /c colfade_tests.exe" />
+				</ExtraCommands>
+			</Target>
 		</Build>
 		<Unit filename="VICColorfade.h" />
 		<Unit filename="VICColorfadeCalcReadPtr.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="VICColorfadeCheckColorValue.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="VICColorfadeCheckMode.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="VICColorfadeGetNextColor.c">
@@ -108,8 +133,17 @@
 		<Unit filename="VICColorfade_tests.c">
 			<Option compilerVar="CC" />
 			<Option target="UTest" />
+			<Option target="Gcc Utest" />
 		</Unit>
-		<Unit filename="coltab.s" />
+		<Unit filename="coltab.c">
+			<Option compilerVar="CC" />
+			<Option target="Gcc Utest" />
+		</Unit>
+		<Unit filename="coltab.s">
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="UTest" />
+		</Unit>
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 			<Option target="Debug" />
