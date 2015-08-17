@@ -1,7 +1,11 @@
 ;The table takes account of hue, so f.e. red to white is a completely different chain than blue to white!!!
 
 ;up to now each chain contains 8 colours. if the destination color needs only fewer steps, it is repeated until length equals 8
-
+;total size: 8*(16*8+16*8+8*8)+8*(32*8) = 4608 bytes = $1200!
+;save 8*(3*16)+8*(2*16) = 640 bytes by removing start color
+;say on average, last color is repeated 4 times. keep it only one time:
+;we save 8*(3*3*16)+8*(2*3*16)=72+48=1920 bytes -> sumup: 2560 bytes, 55%
+;table for start offsets(16 bit table offset, 8 bit startcolor offset): (3*2+2*2)*8+(3*16+2*16)*8 = 80+640=720 bytes
 ;ideas: remove unnecessary repetitions of same color code at end of each chain
 ;		transform color codes to brightness sorted color codes and use delta rle compression
 

@@ -1,6 +1,6 @@
 #ifndef VICCOLORFADE_INTERNAL_H_INCLUDED
 #define VICCOLORFADE_INTERNAL_H_INCLUDED
-
+    #include <MCLib.h>
 	#include "VICColorfade.h"
 	#ifdef UTEST
         #define ccAlloc(size) CuAlloc(size)
@@ -14,6 +14,9 @@
 	extern VICColorfadeTableElement_t VICColorfadeTables[];
 	typedef int8_t VICColorfadeState_t;
     typedef bool ccFree_t;
+    typedef int8_t VICColorfadeCounter_t;
+    typedef uint8_t VICColorfadeDelay_t;
+    typedef uint8_t VICColorfadeSpeed_t;
 
 	//Enums should not emit values out of -128..127
 	enum VICColorfadeMode_tag{
@@ -26,15 +29,15 @@
 
 
 	struct VICColorfade_tag{
-		uint8_t startcolor;
-		uint8_t endcolor;
-		uint8_t speed;
-		uint8_t delay;
-		int16_t counter;
+		VICColorfadeTableElement_t startcolor;
+		VICColorfadeTableElement_t endcolor;
+		VICColorfadeSpeed_t speed;
+        VICColorfadeDelay_t delay;
+		VICColorfadeCounter_t counter;
 		VICColorfadeState_t state;
 		VICColorfadeMode_t mode;
 
-		uint8_t *elementPtr;
+		VICColorfadeTableElement_t *elementPtr;
 		VICColorfadeErrorNo_t errorNo;
 		VICColorfadeErrorMsg_t *errorMsg;
 	};

@@ -78,13 +78,16 @@
 					<Add directory="../../include" />
 					<Add directory="../../../include" />
 					<Add directory="../../../EigeneCProgramme/CuTest" />
+					<Add directory="../../../EigeneCProgramme/MyCLib" />
 				</Compiler>
 				<Linker>
 					<Add library="..\..\..\EigeneCProgramme\CuTest\libcutest.a" />
 					<Add library="..\..\..\EigeneCProgramme\CuTest\CuAlloc\libCuAlloc.a" />
 					<Add library="..\..\..\EigeneCProgramme\CuTest\CuString\libCutestString-cc65.a" />
+					<Add library="..\..\..\EigeneCProgramme\MyCLib\libMCLib.a" />
 				</Linker>
 				<ExtraCommands>
+					<Add before="cmd /c set comspec=C:\Users\MyAcer\Documents\Programmieren\Ansicon\x64\ansicon" />
 					<Add after="cmd /c colfade_tests.exe" />
 				</ExtraCommands>
 			</Target>
@@ -148,6 +151,9 @@
 			<Option compilerVar="CC" />
 			<Option target="Debug" />
 			<Option target="Release" />
+		</Unit>
+		<Unit filename="transformTables.cpp">
+			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Extensions>
 			<code_completion />
