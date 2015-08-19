@@ -91,6 +91,27 @@
 					<Add after="cmd /c colfade_tests.exe" />
 				</ExtraCommands>
 			</Target>
+			<Target title="transformTables">
+				<Option output="transformTables" prefix_auto="1" extension_auto="1" />
+				<Option object_output="gcc/obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="clang" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DUTEST" />
+					<Add directory="../../include" />
+					<Add directory="../../../include" />
+					<Add directory="../../../EigeneCProgramme/CuTest" />
+					<Add directory="../../../EigeneCProgramme/MyCLib" />
+				</Compiler>
+				<Linker>
+					<Add library="..\..\..\EigeneCProgramme\CuTest\libcutest.a" />
+					<Add library="..\..\..\EigeneCProgramme\CuTest\CuAlloc\libCuAlloc.a" />
+					<Add library="..\..\..\EigeneCProgramme\CuTest\CuString\libCutestString-cc65.a" />
+					<Add library="..\..\..\EigeneCProgramme\MyCLib\libMCLib.a" />
+				</Linker>
+			</Target>
 		</Build>
 		<Unit filename="VICColorfade.h" />
 		<Unit filename="VICColorfadeCalcReadPtr.c">
@@ -152,8 +173,9 @@
 			<Option target="Debug" />
 			<Option target="Release" />
 		</Unit>
-		<Unit filename="transformTables.cpp">
-			<Option target="&lt;{~None~}&gt;" />
+		<Unit filename="transformTables.c">
+			<Option compilerVar="CC" />
+			<Option target="transformTables" />
 		</Unit>
 		<Extensions>
 			<code_completion />
