@@ -75,7 +75,22 @@ uint16_t getuint16(void **word){
 }
 
 int printList(char* format, void *list, getElementFnc_Ptr getElem, size_t n, size_t perLine){
+    uint16_t elem;
+
+    for (size_t i = 0; i<n-1;++i){
+        if (0 == i%perLine){
+            printf("\n\t");
+        }
+        elem = getElem(&list);
+        printf(format, elem);
+        printf(", ");
+    }
+    elem = getElem(&list);
+    printf(format, elem);
+
+    return EXIT_SUCCESS;
 }
+
 
 int printArray(char* format, void *arr, getElementFnc_Ptr getElem, size_t n, size_t perLine){
     uint16_t elem;
