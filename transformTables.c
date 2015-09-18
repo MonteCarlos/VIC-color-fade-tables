@@ -57,12 +57,44 @@ fa, 42, b0,
 73, 54, 26, 00,
 06, b4, c3, d1,*/
 
-/*int printArray(char* format, void *arr, size_t elemsize, size_t n){
+typedef uint16_t getElementFnc_t(void** elem);
+typedef getElementFnc_t *getElementFnc_Ptr;
 
-    for (size_t i = 0; i<n;++i){
-        printf(format, arr)
+uint16_t getuint8(void **byte){
+    uint8_t tByte = (uint8_t)(*(uint8_t*)*byte);
+    uint8_t **ptr = (uint8_t**)byte;
+    ++(*ptr);
+    return tByte;
+}
+
+uint16_t getuint16(void **word){
+    uint16_t tWord = (uint16_t)(*(uint16_t*)*word);
+    uint16_t **ptr = (uint16_t**)word;
+    ++(*ptr);
+    return tWord;
+}
+
+int printList(char* format, void *list, getElementFnc_Ptr getElem, size_t n, size_t perLine){
+}
+
+int printArray(char* format, void *arr, getElementFnc_Ptr getElem, size_t n, size_t perLine){
+    uint16_t elem;
+    assert (n!=0);
+    printf("{");
+    for (size_t i = 0; i<n-1;++i){
+        if (0 == i%perLine){
+            printf("\n\t");
+        }
+        elem = getElem(&arr);
+        printf(format, elem);
+        printf(", ");
     }
-}*/
+    elem = getElem(&arr);
+    printf(format, elem);
+    printf("\n}");
+    return EXIT_SUCCESS;
+}
+
 uint8_t combineNibbles(uint8_t left, uint8_t right){
     assert((left < 16)&&(right < 16));
     return left*16+right;
@@ -88,6 +120,7 @@ int printColorSeq(uint8_t destColor){
             readPtr += 2*(4-fadePos);
             break;
         }
+
         readPtr += 2;
     }
     printf("\n");
@@ -124,7 +157,7 @@ int main(void){
 
     printf("uint8_t VICColorfadeTables = {");
 
-    for (size_t destColor = 0; destColor < 5; ++destColor){
+    for (size_t destColor = 0; destColor < 16; ++destColor){
         //printf("uint8_t VICColorfadeTables_FadeTo%d = {", destColor);
 
         pushDestColorOffset();
@@ -172,25 +205,36 @@ int main(void){
     }
     printf("}\n\n");
 
-    printf("uint16_t endColorOffsets[] = {");
-    for (size_t destColor = 0; destColor < 16; ++destColor){
-        printf("%d,",destOffsets[destColor]);
-    }
+    printf("/**** %d Bytes ****/\n\n", destIdx);
 
-    printf("};\n\n uint8_t modeOffsets[] = {");
+    printf("uint16_t endColorOffsets[] = ");
+    printArray("%d", destOffsets, getuint16, 16,8);
+
+    printf(";\n");
+    printf("/**** 32 bytes ****/\n\n");
+    printf("uint8_t modeOffsets[] = {");
     readPtr = &modeOffsets[0];
+
+
     for (size_t destColor = 0; destColor < 16; ++destColor){
-        modeMax = 3;
+        //modeMax = 3;
         if (destColor >= 8){
-            --modeMax;
+            //--modeMax;
+            printList("%d", modeOffsets[3*destColor], getuint8, 2*8, 2);
+
+        }else{
+            printList("%d", modeOffsets[2*destColor+24], getuint8, 3*8, 3);
         }
-        readPtr++;
+        /*readPtr++;
+        printList("%d", &modeOffsets[24], getuint8, 2*8, 2);
+
         for (size_t mode = 1; mode< modeMax; ++mode){
             printf("%2x, ",*readPtr++);
-        }
+        }*/
     }
-
-    printf("};\n\n uint8_t startColorOffsets[] = {");
+    printf("};\n\n");
+    printf("/**** %d Bytes ****/\n\n", (uintptr_t)readPtr-(uintptr_t)&modeOffsets[0]);
+    printf("uint8_t startColorOffsets[] = {");
 
     readPtr = &startOffsets[0];
     for (size_t destColor = 0; destColor < 16; ++destColor){
@@ -206,7 +250,8 @@ int main(void){
             }
         }
     }
-
     printf("};\n\n");
+    printf("/**** %d Bytes ****/\n\n", (uintptr_t)readPtr-(uintptr_t)&startOffsets[0]);
+
 //    VICColorfadeObjDelete(vcf);
 }
