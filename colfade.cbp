@@ -5,6 +5,14 @@
 		<Option title="colfade" />
 		<Option pch_mode="2" />
 		<Option compiler="cc65" />
+		<MakeCommands>
+			<Build command="" />
+			<CompileFile command="" />
+			<Clean command="" />
+			<DistClean command="" />
+			<AskRebuildNeeded command="" />
+			<SilentBuild command=" &gt; $(CMD_NULL)" />
+		</MakeCommands>
 		<Build>
 			<Target title="Debug">
 				<Option output="colfade_dbg.prg" prefix_auto="0" extension_auto="0" />
@@ -117,44 +125,101 @@
 		<Unit filename="VICColorfade.h" />
 		<Unit filename="VICColorfadeCalcReadPtr.c">
 			<Option compilerVar="CC" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="UTest" />
+			<Option target="Gcc Utest" />
 		</Unit>
 		<Unit filename="VICColorfadeCheckColorValue.c">
 			<Option compilerVar="CC" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="UTest" />
+			<Option target="Gcc Utest" />
 		</Unit>
 		<Unit filename="VICColorfadeCheckMode.c">
 			<Option compilerVar="CC" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="UTest" />
+			<Option target="Gcc Utest" />
 		</Unit>
 		<Unit filename="VICColorfadeGetNextColor.c">
 			<Option compilerVar="CC" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="UTest" />
+			<Option target="Gcc Utest" />
 		</Unit>
 		<Unit filename="VICColorfadeIsComplete.c">
 			<Option compilerVar="CC" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="UTest" />
+			<Option target="Gcc Utest" />
 		</Unit>
 		<Unit filename="VICColorfadeNew.c">
 			<Option compilerVar="CC" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="UTest" />
+			<Option target="Gcc Utest" />
 		</Unit>
 		<Unit filename="VICColorfadeObjAlloc.c">
 			<Option compilerVar="CC" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="UTest" />
+			<Option target="Gcc Utest" />
 		</Unit>
 		<Unit filename="VICColorfadeSetMode.c">
 			<Option compilerVar="CC" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="UTest" />
+			<Option target="Gcc Utest" />
 		</Unit>
 		<Unit filename="VICColorfadeSetNewEndcolor.c">
 			<Option compilerVar="CC" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="UTest" />
+			<Option target="Gcc Utest" />
 		</Unit>
 		<Unit filename="VICColorfadeSetReadPtr.c">
 			<Option compilerVar="CC" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="UTest" />
+			<Option target="Gcc Utest" />
 		</Unit>
 		<Unit filename="VICColorfadeSetStartEnd.c">
 			<Option compilerVar="CC" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="UTest" />
+			<Option target="Gcc Utest" />
 		</Unit>
 		<Unit filename="VICColorfadeToggleStartEndColor.c">
 			<Option compilerVar="CC" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="UTest" />
+			<Option target="Gcc Utest" />
 		</Unit>
 		<Unit filename="VICColorfade_SetSpeed.c">
 			<Option compilerVar="CC" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="UTest" />
+			<Option target="Gcc Utest" />
 		</Unit>
-		<Unit filename="VICColorfade_internal.h" />
+		<Unit filename="VICColorfade_internal.h">
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="UTest" />
+			<Option target="Gcc Utest" />
+		</Unit>
 		<Unit filename="VICColorfade_tests.c">
 			<Option compilerVar="CC" />
 			<Option target="UTest" />

@@ -76,17 +76,23 @@ uint16_t getuint16(void **word){
 
 int printList(char* format, void *list, getElementFnc_Ptr getElem, size_t n, size_t perLine){
     uint16_t elem;
+    size_t i;
 
-    for (size_t i = 0; i<n-1;++i){
+    for (i = 0; i<n-1;++i){
         if (0 == i%perLine){
             printf("\n\t");
+            elem = getElem(&list);
+            continue;
         }
         elem = getElem(&list);
         printf(format, elem);
         printf(", ");
     }
-    elem = getElem(&list);
-    printf(format, elem);
+
+    if (0 != i%perLine){
+        elem = getElem(&list);
+        printf(format, elem);
+    }
 
     return EXIT_SUCCESS;
 }
@@ -233,12 +239,12 @@ int main(void){
 
     for (size_t destColor = 0; destColor < 16; ++destColor){
         //modeMax = 3;
-        if (destColor >= 8){
+        if (destColor < 8){
             //--modeMax;
-            printList("%d", modeOffsets[3*destColor], getuint8, 2*8, 2);
+            printList("%d", &modeOffsets[3*destColor], getuint8, 2*8, 3);
 
         }else{
-            printList("%d", modeOffsets[2*destColor+24], getuint8, 3*8, 3);
+            printList("%d", &modeOffsets[2*destColor+24], getuint8, 3*8, 2);
         }
         /*readPtr++;
         printList("%d", &modeOffsets[24], getuint8, 2*8, 2);
